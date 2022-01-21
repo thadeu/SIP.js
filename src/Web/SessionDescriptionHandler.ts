@@ -179,7 +179,7 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
 
     return Promise.resolve().then(() => {
       if (this.shouldAcquireMedia) {
-        return this.acquire(this.constraints).then(() => {
+        return this.acquire(this.constraints, options.streams).then(() => {
           this.shouldAcquireMedia = false;
         });
       }
@@ -258,7 +258,7 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
     return Promise.resolve().then(() => {
       // Media should be acquired in getDescription unless we need to do it sooner for some reason (FF61+)
       if (this.shouldAcquireMedia && this.options.alwaysAcquireMediaFirst) {
-        return this.acquire(this.constraints).then(() => {
+        return this.acquire(this.constraints, options.streams).then(() => {
           this.shouldAcquireMedia = false;
         });
       }
@@ -589,11 +589,11 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
     };
   }
 
-  private acquire(constraints: any): any {
+  private acquire(constraints: any, streams?: any): any {
     // Default audio & video to true
     constraints = this.checkAndDefaultConstraints(constraints);
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       /*
        * Make the call asynchronous, so that ICCs have a chance
        * to define callbacks to `userMediaRequest`
@@ -602,14 +602,22 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
       this.emit("userMediaRequest", constraints);
 
       if (constraints.audio || constraints.video) {
-        navigator.mediaDevices.getUserMedia(constraints).then((streams) => {
+        try {
+          if (streams) {
+            this.logger.log("using custom media streams");
+          } else {
+            this.logger.log("using navigator.mediaDevices.getUserMedia");
+            streams = await navigator.mediaDevices.getUserMedia(constraints)
+          }
+
+          this.logger.log(`MediaStream active is ${streams.active}`)
           this.observer.trackAdded();
           this.emit("userMedia", streams);
           resolve(streams);
-        }).catch((e: any) => {
+        } catch (e: any) {
           this.emit("userMediaFailed", e);
           reject(e);
-        });
+        }
       } else {
         // Local streams were explicitly excluded.
         resolve([]);
@@ -653,6 +661,7 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
         streams.forEach((stream: any) => {
           if (this.peerConnection.addTrack) {
             stream.getTracks().forEach((track: any) => {
+              this.logger.log(`MediaStreamTrack enabled is ${track.enabled}`)
               this.peerConnection.addTrack(track, stream);
             });
           } else {
