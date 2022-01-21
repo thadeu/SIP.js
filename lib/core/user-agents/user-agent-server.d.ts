@@ -25,9 +25,9 @@ export declare class UserAgentServer implements IncomingRequest {
     private _transaction;
     constructor(transactionConstructor: ServerTransactionConstructor, core: UserAgentCore, message: IncomingRequestMessage, delegate?: IncomingRequestDelegate | undefined);
     dispose(): void;
-    readonly loggerFactory: LoggerFactory;
+    get loggerFactory(): LoggerFactory;
     /** The transaction associated with this request. */
-    readonly transaction: ServerTransaction;
+    get transaction(): ServerTransaction;
     accept(options?: ResponseOptions): OutgoingResponse;
     progress(options?: ResponseOptions): OutgoingResponse;
     redirect(contacts: Array<URI>, options?: ResponseOptions): OutgoingResponse;
@@ -52,11 +52,11 @@ export declare class UserAgentServer implements IncomingRequest {
      * @param request Incoming CANCEL request.
      */
     receiveCancel(message: IncomingRequestMessage): void;
-    protected readonly acceptable: boolean;
-    protected readonly progressable: boolean;
-    protected readonly redirectable: boolean;
-    protected readonly rejectable: boolean;
-    protected readonly tryingable: boolean;
+    protected get acceptable(): boolean;
+    protected get progressable(): boolean;
+    protected get redirectable(): boolean;
+    protected get rejectable(): boolean;
+    protected get tryingable(): boolean;
     /**
      * When a UAS wishes to construct a response to a request, it follows
      * the general procedures detailed in the following subsections.

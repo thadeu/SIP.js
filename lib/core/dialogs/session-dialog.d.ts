@@ -26,13 +26,13 @@ export declare class SessionDialog extends Dialog implements Session {
     private logger;
     constructor(initialTransaction: InviteClientTransaction | InviteServerTransaction, core: UserAgentCore, state: DialogState, delegate?: SessionDelegate);
     dispose(): void;
-    readonly sessionState: SessionState;
+    get sessionState(): SessionState;
     /** The state of the offer/answer exchange. */
-    readonly signalingState: SignalingState;
+    get signalingState(): SignalingState;
     /** The current offer. Undefined unless signaling state HaveLocalOffer, HaveRemoteOffer, of Stable. */
-    readonly offer: Body | undefined;
+    get offer(): Body | undefined;
     /** The current answer. Undefined unless signaling state Stable. */
-    readonly answer: Body | undefined;
+    get answer(): Body | undefined;
     /** Confirm the dialog. Only matters if dialog is currently early. */
     confirm(): void;
     /** Re-confirm the dialog. Only matters if handling re-INVITE request. */

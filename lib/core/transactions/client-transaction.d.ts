@@ -23,7 +23,7 @@ export declare abstract class ClientTransaction extends Transaction {
     private static makeId;
     protected constructor(_request: OutgoingRequestMessage, transport: Transport, user: ClientTransactionUser, state: TransactionState, loggerCategory: string);
     /** The outgoing request the transaction handling. */
-    readonly request: OutgoingRequestMessage;
+    get request(): OutgoingRequestMessage;
     /**
      * Receive incoming responses from the transport which match this transaction.
      * Responses will be delivered to the transaction user as necessary.

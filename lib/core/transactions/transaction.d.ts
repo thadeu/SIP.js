@@ -38,13 +38,13 @@ export declare abstract class Transaction extends EventEmitter {
      */
     dispose(): void;
     /** Transaction id. */
-    readonly id: string;
+    get id(): string;
     /** Transaction kind. Deprecated. */
-    readonly kind: string;
+    get kind(): string;
     /** Transaction state. */
-    readonly state: TransactionState;
+    get state(): TransactionState;
     /** Transaction transport. */
-    readonly transport: Transport;
+    get transport(): Transport;
     /** Subscribe to 'stateChanged' event. */
     on(name: "stateChanged", callback: () => void): this;
     protected logTransportError(error: TransportError, message: string): void;

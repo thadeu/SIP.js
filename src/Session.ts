@@ -1106,7 +1106,7 @@ export class InviteServerContext extends Session implements ServerContext {
     if (options.statusCode === 100) {
       try {
         this.incomingRequest.trying();
-      } catch (error) {
+      } catch (error: any) {
         this.onContextError(error);
         // FIXME: Assuming error due to async race on CANCEL and eating error.
         if (!this._canceled) {

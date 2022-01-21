@@ -157,7 +157,7 @@ export declare class InviteServerContext extends Session implements ServerContex
      * of a class of cases where the ISC user needs to do something prior
      * to the first call to `progress()` and is unable to do so.
      */
-    readonly autoSendAnInitialProvisionalResponse: boolean;
+    get autoSendAnInitialProvisionalResponse(): boolean;
     reply(options?: any): this;
     reject(options?: InviteServerContext.Options): this;
     /**

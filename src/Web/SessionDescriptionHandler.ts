@@ -331,7 +331,7 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
     }
     try {
       this.dtmfSender.insertDTMF(tones, options.duration, options.interToneGap);
-    } catch (e) {
+    } catch (e: any) {
       if (e.type ===  "InvalidStateError" || e.type ===  "InvalidCharacterError") {
         this.logger.error(e);
         return false;
@@ -416,7 +416,7 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
       );
       this.emit("peerConnection-" + methodName + "Failed", error);
       throw error;
-    }).then((sdp: RTCSessionDescriptionInit) =>
+    }).then((sdp: any) =>
       Utils.reducePromises(modifiers, this.createRTCSessionDescriptionInit(sdp))
     ).then((sdp: RTCSessionDescriptionInit) => {
       this.resetIceGatheringComplete();

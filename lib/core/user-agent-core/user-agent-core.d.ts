@@ -45,9 +45,9 @@ export declare class UserAgentCore {
     /** Reset. */
     reset(): void;
     /** Logger factory. */
-    readonly loggerFactory: LoggerFactory;
+    get loggerFactory(): LoggerFactory;
     /** Transport. */
-    readonly transport: Transport;
+    get transport(): Transport;
     /**
      * Send INVITE.
      * @param request Outgoing request.

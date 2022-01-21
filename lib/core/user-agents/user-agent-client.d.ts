@@ -16,9 +16,9 @@ export declare class UserAgentClient implements OutgoingRequest {
     private stale;
     constructor(transactionConstructor: ClientTransactionConstructor, core: UserAgentCore, message: OutgoingRequestMessage, delegate?: OutgoingRequestDelegate | undefined);
     dispose(): void;
-    readonly loggerFactory: LoggerFactory;
+    get loggerFactory(): LoggerFactory;
     /** The transaction associated with this request. */
-    readonly transaction: ClientTransaction;
+    get transaction(): ClientTransaction;
     /**
      * Since requests other than INVITE are responded to immediately, sending a
      * CANCEL for a non-INVITE request would always create a race condition.

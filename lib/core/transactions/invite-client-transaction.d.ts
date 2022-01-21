@@ -39,7 +39,7 @@ export declare class InviteClientTransaction extends ClientTransaction {
      */
     dispose(): void;
     /** Transaction kind. Deprecated. */
-    readonly kind: string;
+    get kind(): string;
     /**
      * ACK a 2xx final response.
      *

@@ -29,7 +29,7 @@ export declare class NonInviteClientTransaction extends ClientTransaction {
      */
     dispose(): void;
     /** Transaction kind. Deprecated. */
-    readonly kind: string;
+    get kind(): string;
     /**
      * Handler for incoming responses from the transport which match this transaction.
      * @param response The incoming response.

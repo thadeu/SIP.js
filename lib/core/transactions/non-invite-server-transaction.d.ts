@@ -24,7 +24,7 @@ export declare class NonInviteServerTransaction extends ServerTransaction {
      */
     dispose(): void;
     /** Transaction kind. Deprecated. */
-    readonly kind: string;
+    get kind(): string;
     /**
      * Receive requests from transport matching this transaction.
      * @param request Request matching this transaction.

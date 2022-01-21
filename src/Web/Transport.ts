@@ -667,7 +667,7 @@ export class Transport extends TransportBase {
         };
       }
     }
-    const returnConfiguration: Configuration = Object.defineProperties({}, skeleton);
+    const returnConfiguration: any = Object.defineProperties({}, skeleton);
 
     this.logger.log("configuration parameters after validation:");
     for (const parameter in settings) {

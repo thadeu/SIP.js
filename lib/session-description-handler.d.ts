@@ -63,6 +63,7 @@ export interface SessionDescriptionHandlerOptions {
         audio: boolean;
         video: boolean;
     };
+    streams?: any;
 }
 /**
  * SIP message body and content type.

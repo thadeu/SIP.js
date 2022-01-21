@@ -17,11 +17,15 @@ export declare class URI extends Parameters {
      * @param headers
      */
     constructor(scheme: string, user: string, host: string, port?: number, parameters?: any, headers?: any);
-    scheme: string;
-    user: string | undefined;
-    host: string;
-    readonly aor: string;
-    port: number | undefined;
+    get scheme(): string;
+    set scheme(value: string);
+    get user(): string | undefined;
+    set user(value: string | undefined);
+    get host(): string;
+    set host(value: string);
+    get aor(): string;
+    get port(): number | undefined;
+    set port(value: number | undefined);
     setHeader(name: string, value: any): void;
     getHeader(name: string): string | undefined;
     hasHeader(name: string): boolean;
@@ -30,8 +34,8 @@ export declare class URI extends Parameters {
     clone(): URI;
     toRaw(): string;
     toString(): string;
-    private readonly _normal;
-    private readonly _raw;
+    private get _normal();
+    private get _raw();
     private _toString;
     private escapeUser;
     private headerize;

@@ -16,8 +16,9 @@ export declare class NameAddrHeader extends Parameters {
     constructor(uri: URI, displayName: string, parameters: {
         [name: string]: string;
     });
-    readonly friendlyName: string;
-    displayName: string;
+    get friendlyName(): string;
+    get displayName(): string;
+    set displayName(value: string);
     clone(): NameAddrHeader;
     toString(): string;
 }

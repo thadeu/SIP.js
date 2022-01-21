@@ -51,14 +51,16 @@ export declare class SubscriptionDialog extends Dialog implements Subscription {
     private refreshTimer;
     constructor(subscriptionEvent: string, subscriptionExpires: number, subscriptionState: SubscriptionState, core: UserAgentCore, state: DialogState, delegate?: SubscriptionDelegate);
     dispose(): void;
-    autoRefresh: boolean;
-    readonly subscriptionEvent: string;
+    get autoRefresh(): boolean;
+    set autoRefresh(autoRefresh: boolean);
+    get subscriptionEvent(): string;
     /** Number of seconds until subscription expires. */
-    subscriptionExpires: number;
-    readonly subscriptionExpiresInitial: number;
+    get subscriptionExpires(): number;
+    set subscriptionExpires(expires: number);
+    get subscriptionExpiresInitial(): number;
     /** Number of seconds until subscription auto refresh. */
-    readonly subscriptionRefresh: number | undefined;
-    readonly subscriptionState: SubscriptionState;
+    get subscriptionRefresh(): number | undefined;
+    get subscriptionState(): SubscriptionState;
     /**
      * Receive in dialog request message from transport.
      * @param message The incoming request message.

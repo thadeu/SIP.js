@@ -47,7 +47,7 @@ export declare class Dialog {
      * dialog IDs.
      * https://tools.ietf.org/html/rfc3261#section-12
      */
-    readonly id: string;
+    get id(): string;
     /**
      * A dialog can also be in the "early" state, which occurs when it is
      * created with a provisional response, and then it transition to the
@@ -62,35 +62,35 @@ export declare class Dialog {
      * when it is confirmed but an ACK has not yet been received (in
      * particular with regard to a callee sending BYE requests).
      */
-    readonly early: boolean;
+    get early(): boolean;
     /** Call identifier component of the dialog id. */
-    readonly callId: string;
+    get callId(): string;
     /** Local tag component of the dialog id. */
-    readonly localTag: string;
+    get localTag(): string;
     /** Remote tag component of the dialog id. */
-    readonly remoteTag: string;
+    get remoteTag(): string;
     /** Local sequence number (used to order requests from the UA to its peer). */
-    readonly localSequenceNumber: number | undefined;
+    get localSequenceNumber(): number | undefined;
     /** Remote sequence number (used to order requests from its peer to the UA). */
-    readonly remoteSequenceNumber: number | undefined;
+    get remoteSequenceNumber(): number | undefined;
     /** Local URI. */
-    readonly localURI: URI;
+    get localURI(): URI;
     /** Remote URI. */
-    readonly remoteURI: URI;
+    get remoteURI(): URI;
     /** Remote target. */
-    readonly remoteTarget: URI;
+    get remoteTarget(): URI;
     /**
      * Route set, which is an ordered list of URIs. The route set is the
      * list of servers that need to be traversed to send a request to the peer.
      */
-    readonly routeSet: Array<string>;
+    get routeSet(): Array<string>;
     /**
      * If the request was sent over TLS, and the Request-URI contained
      * a SIPS URI, the "secure" flag is set to true. *NOT IMPLEMENTED*
      */
-    readonly secure: boolean;
+    get secure(): boolean;
     /** The user agent core servicing this dialog. */
-    readonly userAgentCore: UserAgentCore;
+    get userAgentCore(): UserAgentCore;
     /** Confirm the dialog. Only matters if dialog is currently early. */
     confirm(): void;
     /**

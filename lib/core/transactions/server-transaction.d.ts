@@ -17,7 +17,7 @@ export declare abstract class ServerTransaction extends Transaction {
     protected user: ServerTransactionUser;
     protected constructor(_request: IncomingRequestMessage, transport: Transport, user: ServerTransactionUser, state: TransactionState, loggerCategory: string);
     /** The incoming request the transaction handling. */
-    readonly request: IncomingRequestMessage;
+    get request(): IncomingRequestMessage;
     /**
      * Receive incoming requests from the transport which match this transaction.
      * @param request The incoming request.
