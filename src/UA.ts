@@ -53,6 +53,7 @@ export namespace UA {
     allowLegacyNotifications?: boolean;
     allowOutOfDialogRefers?: boolean;
     authenticationFactory?: (ua: UA) => DigestAuthentication | any; // any for custom ones
+    isInviteAcceptable?: (() => boolean) | any;
     authorizationUser?: string;
     autostart?: boolean;
     autostop?: boolean;
@@ -138,6 +139,7 @@ export class UA extends EventEmitter {
     TAG_LENGTH: 10
   };
 
+  public isInviteAcceptable?: (() => boolean) | any;
   public type: TypeStrings;
   public configuration: UA.Options;
   public applicants: {[id: string]: InviteClientContext};
@@ -182,6 +184,8 @@ export class UA extends EventEmitter {
     this.subscriptions = {};
     this.publishers = {};
     this.status = UAStatus.STATUS_INIT;
+
+    this.isInviteAcceptable = configuration?.isInviteAcceptable || (() => true);
 
     /**
      * Load configuration
@@ -314,6 +318,11 @@ export class UA extends EventEmitter {
 
     const userAgentCoreDelegate: UserAgentCoreDelegate = {
       onInvite: (incomingInviteRequest: IncomingInviteRequest): void => {
+        if (!this.isInviteAcceptable(incomingInviteRequest)) {
+          incomingInviteRequest.reject({ statusCode: 487 });
+          return;
+        }
+
         // FIXME: Ported - 100 Trying send should be configurable.
         // Only required if TU will not respond in 200ms.
         // https://tools.ietf.org/html/rfc3261#section-17.2.1

@@ -607,10 +607,10 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
             this.logger.log("using custom media streams");
           } else {
             this.logger.log("using navigator.mediaDevices.getUserMedia");
-            streams = await navigator.mediaDevices.getUserMedia(constraints)
+            streams = await navigator.mediaDevices.getUserMedia(constraints);
           }
 
-          this.logger.log(`MediaStream active is ${streams.active}`)
+          this.logger.log(`MediaStream active is ${streams.active}`);
           this.observer.trackAdded();
           this.emit("userMedia", streams);
           resolve(streams);
@@ -632,7 +632,7 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
         this.logger.error(error.error);
       }
       throw error;
-    }).then((streams) => {
+    }).then((returnedStreams) => {
       this.logger.log("acquired local media streams");
       try {
         // Remove old tracks
@@ -641,7 +641,7 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
             this.peerConnection.removeTrack(sender);
           });
         }
-        return streams;
+        return returnedStreams;
       } catch (e) {
         return Promise.reject(e);
       }
@@ -655,13 +655,13 @@ export class SessionDescriptionHandler extends EventEmitter implements SessionDe
         this.logger.error(error.error);
       }
       throw error;
-    }).then((streams: any) => {
+    }).then((returnedStreams: any) => {
       try {
-        streams = [].concat(streams);
-        streams.forEach((stream: any) => {
+        returnedStreams = [].concat(returnedStreams);
+        returnedStreams.forEach((stream: any) => {
           if (this.peerConnection.addTrack) {
             stream.getTracks().forEach((track: any) => {
-              this.logger.log(`MediaStreamTrack enabled is ${track.enabled}`)
+              this.logger.log(`MediaStreamTrack enabled is ${track.enabled}`);
               this.peerConnection.addTrack(track, stream);
             });
           } else {

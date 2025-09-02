@@ -16,6 +16,7 @@ export declare namespace UA {
         allowLegacyNotifications?: boolean;
         allowOutOfDialogRefers?: boolean;
         authenticationFactory?: (ua: UA) => DigestAuthentication | any;
+        isInviteAcceptable?: (() => boolean) | any;
         authorizationUser?: string;
         autostart?: boolean;
         autostop?: boolean;
@@ -78,6 +79,7 @@ export declare class UA extends EventEmitter {
         MAX_FORWARDS: number;
         TAG_LENGTH: number;
     };
+    isInviteAcceptable?: (() => boolean) | any;
     type: TypeStrings;
     configuration: UA.Options;
     applicants: {
