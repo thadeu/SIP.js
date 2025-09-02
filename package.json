@@ -2,7 +2,7 @@
   "name": "sip.js",
   "title": "SIP.js",
   "description": "A simple, intuitive, and powerful JavaScript signaling library",
-  "version": "0.14.7",
+  "version": "0.14.8",
   "license": "MIT",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -55,7 +55,6 @@
     "node": ">=8.0"
   },
   "scripts": {
-    "prebuild": "tslint -p tsconfig-base.json -c tslint.json",
     "generate-grammar": "node build/grammarGenerator.js",
     "build-reg-bundle": "webpack --progress --config build/webpack.config.js --env.buildType reg",
     "build-min-bundle": "webpack --progress --config build/webpack.config.js --env.buildType min",
