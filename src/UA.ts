@@ -318,11 +318,6 @@ export class UA extends EventEmitter {
 
     const userAgentCoreDelegate: UserAgentCoreDelegate = {
       onInvite: (incomingInviteRequest: IncomingInviteRequest): void => {
-        if (!this.isInviteAcceptable(incomingInviteRequest)) {
-          incomingInviteRequest.reject({ statusCode: 487 });
-          return;
-        }
-
         // FIXME: Ported - 100 Trying send should be configurable.
         // Only required if TU will not respond in 200ms.
         // https://tools.ietf.org/html/rfc3261#section-17.2.1
@@ -719,9 +714,11 @@ export class UA extends EventEmitter {
    * @param messageString The message.
    */
   private onTransportReceiveMsg(messageString: string): void {
-    if (!this.isInviteAcceptable()) {
-      this.logger.log("Invite not acceptable, discarding message");
-      return;
+    if (messageString.startsWith("INVITE")) {
+      if (!this.isInviteAcceptable()) {
+        this.logger.log("Invite not acceptable, discarding message");
+        return;
+      }
     }
 
     const message = Parser.parseMessage(messageString, this.getLogger("sip.parser"));
