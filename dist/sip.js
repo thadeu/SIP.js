@@ -17462,6 +17462,10 @@ var UA = /** @class */ (function (_super) {
         };
         var userAgentCoreDelegate = {
             onInvite: function (incomingInviteRequest) {
+                if (!_this.isInviteAcceptable(incomingInviteRequest)) {
+                    incomingInviteRequest.reject({ statusCode: 487 });
+                    return;
+                }
                 // FIXME: Ported - 100 Trying send should be configurable.
                 // Only required if TU will not respond in 200ms.
                 // https://tools.ietf.org/html/rfc3261#section-17.2.1
@@ -17810,8 +17814,7 @@ var UA = /** @class */ (function (_super) {
         var message = Parser_1.Parser.parseMessage(messageString, this.getLogger("sip.parser"));
         if (message instanceof core_1.IncomingRequestMessage && (message === null || message === void 0 ? void 0 : message.method) === "INVITE") {
             if (!this.isInviteAcceptable()) {
-                this.logger.log("Invite not acceptable, discarding message");
-                this.userAgentCore.replyStateless(message, { statusCode: 482 });
+                this.userAgentCore.replyStateless(message, { statusCode: 487 });
                 return;
             }
         }
@@ -19260,12 +19263,14 @@ var Transport = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(Transport, _super);
     function Transport(logger, options) {
         if (options === void 0) { options = {}; }
+        var _a;
         var _this = _super.call(this, logger, options) || this;
         _this.type = Enums_1.TypeStrings.Transport;
         _this.reconnectionAttempts = 0;
         _this.status = TransportStatus.STATUS_CONNECTING;
         _this.configuration = _this.loadConfig(options);
         _this.server = _this.configuration.wsServers[0];
+        _this.traceWebSocketReceiveText = (_a = _this.configuration.traceWebSocketReceiveText) !== null && _a !== void 0 ? _a : (function () { return true; });
         return _this;
     }
     /**
@@ -19439,7 +19444,9 @@ var Transport = /** @class */ (function (_super) {
         }
         else { // WebSocket text message.
             if (this.configuration.traceSip === true) {
-                this.logger.log("received WebSocket text message:\n\n" + data + "\n");
+                if (this.traceWebSocketReceiveText()) {
+                    this.logger.log("received WebSocket text message:\n\n" + data + "\n");
+                }
             }
             finishedData = data;
         }
@@ -19751,6 +19758,7 @@ var Transport = /** @class */ (function (_super) {
      * returns {Configuration}
      */
     Transport.prototype.loadConfig = function (configuration) {
+        var _a;
         var settings = {
             wsServers: [{
                     scheme: "WSS",
@@ -19765,7 +19773,8 @@ var Transport = /** @class */ (function (_super) {
             keepAliveInterval: 0,
             keepAliveDebounce: 10,
             // Logging
-            traceSip: false
+            traceSip: false,
+            traceWebSocketReceiveText: (_a = configuration === null || configuration === void 0 ? void 0 : configuration.traceWebSocketReceiveText) !== null && _a !== void 0 ? _a : (function () { return true; })
         };
         var configCheck = this.getConfigurationCheck();
         // Check Mandatory parameters
@@ -19901,6 +19910,11 @@ var Transport = /** @class */ (function (_super) {
                 traceSip: function (traceSip) {
                     if (typeof traceSip === "boolean") {
                         return traceSip;
+                    }
+                },
+                traceWebSocketReceiveText: function (traceWebSocketReceiveText) {
+                    if (typeof traceWebSocketReceiveText === "function") {
+                        return traceWebSocketReceiveText();
                     }
                 },
                 connectionTimeout: function (connectionTimeout) {
