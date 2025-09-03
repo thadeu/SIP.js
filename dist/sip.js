@@ -15238,6 +15238,7 @@ var InviteServerContext = /** @class */ (function (_super) {
         var _this = this;
         if (options === void 0) { options = {}; }
         // FIXME: Need guard against calling more than once.
+        var st11 = performance.now();
         this._accept(options)
             .then(function (_a) {
             var message = _a.message, session = _a.session;
@@ -15253,7 +15254,10 @@ var InviteServerContext = /** @class */ (function (_super) {
             };
             _this.session = session;
             _this.status = Enums_1.SessionStatus.STATUS_WAITING_FOR_ACK;
+            var st1 = performance.now();
             _this.accepted(message, Utils_1.Utils.getReasonPhrase(200));
+            var st2 = performance.now();
+            _this.logger.log("this.accepted(message,) ".concat(st2 - st1, "ms"));
         })
             .catch(function (error) {
             _this.onContextError(error);
@@ -15261,6 +15265,9 @@ var InviteServerContext = /** @class */ (function (_super) {
             if (!_this._canceled) {
                 throw error;
             }
+        }).finally(function () {
+            var st22 = performance.now();
+            _this.logger.log("finally _accept() ".concat(st22 - st11, "ms"));
         });
         return this;
     };
@@ -19263,14 +19270,12 @@ var Transport = /** @class */ (function (_super) {
     (0, tslib_1.__extends)(Transport, _super);
     function Transport(logger, options) {
         if (options === void 0) { options = {}; }
-        var _a;
         var _this = _super.call(this, logger, options) || this;
         _this.type = Enums_1.TypeStrings.Transport;
         _this.reconnectionAttempts = 0;
         _this.status = TransportStatus.STATUS_CONNECTING;
         _this.configuration = _this.loadConfig(options);
         _this.server = _this.configuration.wsServers[0];
-        _this.traceWebSocketReceiveText = (_a = _this.configuration.traceWebSocketReceiveText) !== null && _a !== void 0 ? _a : (function () { return true; });
         return _this;
     }
     /**
@@ -19444,9 +19449,7 @@ var Transport = /** @class */ (function (_super) {
         }
         else { // WebSocket text message.
             if (this.configuration.traceSip === true) {
-                if (this.traceWebSocketReceiveText()) {
-                    this.logger.log("received WebSocket text message:\n\n" + data + "\n");
-                }
+                this.logger.log("received WebSocket text message:\n\n" + data + "\n");
             }
             finishedData = data;
         }
@@ -19758,7 +19761,6 @@ var Transport = /** @class */ (function (_super) {
      * returns {Configuration}
      */
     Transport.prototype.loadConfig = function (configuration) {
-        var _a;
         var settings = {
             wsServers: [{
                     scheme: "WSS",
@@ -19773,8 +19775,7 @@ var Transport = /** @class */ (function (_super) {
             keepAliveInterval: 0,
             keepAliveDebounce: 10,
             // Logging
-            traceSip: false,
-            traceWebSocketReceiveText: (_a = configuration === null || configuration === void 0 ? void 0 : configuration.traceWebSocketReceiveText) !== null && _a !== void 0 ? _a : (function () { return true; })
+            traceSip: false
         };
         var configCheck = this.getConfigurationCheck();
         // Check Mandatory parameters
@@ -19910,11 +19911,6 @@ var Transport = /** @class */ (function (_super) {
                 traceSip: function (traceSip) {
                     if (typeof traceSip === "boolean") {
                         return traceSip;
-                    }
-                },
-                traceWebSocketReceiveText: function (traceWebSocketReceiveText) {
-                    if (typeof traceWebSocketReceiveText === "function") {
-                        return traceWebSocketReceiveText();
                     }
                 },
                 connectionTimeout: function (connectionTimeout) {

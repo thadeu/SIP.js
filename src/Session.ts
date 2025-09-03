@@ -1034,6 +1034,8 @@ export class InviteServerContext extends Session implements ServerContext {
    */
   public accept(options: InviteServerContext.Options = {}): this {
     // FIXME: Need guard against calling more than once.
+    const st11 = performance.now();
+
     this._accept(options)
       .then(({ message, session }) => {
         session.delegate = {
@@ -1048,7 +1050,11 @@ export class InviteServerContext extends Session implements ServerContext {
         };
         this.session = session;
         this.status = SessionStatus.STATUS_WAITING_FOR_ACK;
+
+        const st1 = performance.now();
         this.accepted(message, Utils.getReasonPhrase(200));
+        const st2 = performance.now();
+        this.logger.log(`this.accepted(message,) ${st2 - st1}ms`);
       })
       .catch((error) => {
         this.onContextError(error);
@@ -1056,6 +1062,9 @@ export class InviteServerContext extends Session implements ServerContext {
         if (!this._canceled) {
           throw error;
         }
+      }).finally(() => {
+        const st22 = performance.now();
+        this.logger.log(`finally _accept() ${st22 - st11}ms`);
       });
     return this;
   }

@@ -21,7 +21,6 @@ export interface Configuration {
     keepAliveInterval: number;
     keepAliveDebounce: number;
     traceSip: boolean;
-    traceWebSocketReceiveText?: () => boolean;
 }
 /**
  * @class Transport
@@ -48,7 +47,6 @@ export declare class Transport extends TransportBase {
     private boundOnMessage;
     private boundOnClose;
     private boundOnError;
-    private traceWebSocketReceiveText;
     constructor(logger: Logger, options?: any);
     /**
      * @returns {Boolean}
