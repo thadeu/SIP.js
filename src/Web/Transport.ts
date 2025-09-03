@@ -31,7 +31,6 @@ export interface Configuration {
   keepAliveInterval: number;
   keepAliveDebounce: number;
   traceSip: boolean;
-  traceWebSocketReceiveText?: () => boolean;
 }
 
 /**
@@ -75,7 +74,6 @@ export class Transport extends TransportBase {
   private boundOnMessage: any;
   private boundOnClose: any;
   private boundOnError: any;
-  private traceWebSocketReceiveText: () => boolean;
 
   constructor(logger: Logger, options: any = {}) {
     super(logger, options);
@@ -85,7 +83,6 @@ export class Transport extends TransportBase {
     this.status = TransportStatus.STATUS_CONNECTING;
     this.configuration = this.loadConfig(options);
     this.server = this.configuration.wsServers[0];
-    this.traceWebSocketReceiveText = this.configuration.traceWebSocketReceiveText ?? (() => true);
   }
 
   /**
@@ -266,9 +263,7 @@ export class Transport extends TransportBase {
       }
     } else { // WebSocket text message.
       if (this.configuration.traceSip === true) {
-        if (this.traceWebSocketReceiveText()) {
-          this.logger.log("received WebSocket text message:\n\n" + data + "\n");
-        }
+        this.logger.log("received WebSocket text message:\n\n" + data + "\n");
       }
       finishedData = data;
     }
@@ -621,8 +616,7 @@ export class Transport extends TransportBase {
       keepAliveDebounce: 10,
 
       // Logging
-      traceSip: false,
-      traceWebSocketReceiveText: configuration?.traceWebSocketReceiveText ?? (() => true)
+      traceSip: false
     };
 
     const configCheck: {mandatory: {[name: string]: any}, optional: {[name: string]: any}} =
@@ -770,12 +764,6 @@ export class Transport extends TransportBase {
         traceSip: (traceSip: boolean): boolean | undefined => {
           if (typeof traceSip === "boolean") {
             return traceSip;
-          }
-        },
-
-        traceWebSocketReceiveText: (traceWebSocketReceiveText: () => boolean): boolean | undefined => {
-          if (typeof traceWebSocketReceiveText === "function") {
-            return traceWebSocketReceiveText();
           }
         },
 
