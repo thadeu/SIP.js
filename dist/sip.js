@@ -17807,13 +17807,14 @@ var UA = /** @class */ (function (_super) {
      */
     UA.prototype.onTransportReceiveMsg = function (messageString) {
         var _this = this;
-        if (messageString.startsWith("INVITE")) {
+        var message = Parser_1.Parser.parseMessage(messageString, this.getLogger("sip.parser"));
+        if (message instanceof core_1.IncomingRequestMessage && (message === null || message === void 0 ? void 0 : message.method) === "INVITE") {
             if (!this.isInviteAcceptable()) {
                 this.logger.log("Invite not acceptable, discarding message");
+                this.userAgentCore.replyStateless(message, { statusCode: 482 });
                 return;
             }
         }
-        var message = Parser_1.Parser.parseMessage(messageString, this.getLogger("sip.parser"));
         if (!message) {
             this.logger.warn("UA failed to parse incoming SIP message - discarding.");
             return;

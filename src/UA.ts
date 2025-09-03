@@ -714,14 +714,16 @@ export class UA extends EventEmitter {
    * @param messageString The message.
    */
   private onTransportReceiveMsg(messageString: string): void {
-    if (messageString.startsWith("INVITE")) {
+    const message = Parser.parseMessage(messageString, this.getLogger("sip.parser"));
+
+    if (message instanceof IncomingRequestMessage && message?.method === "INVITE") {
       if (!this.isInviteAcceptable()) {
         this.logger.log("Invite not acceptable, discarding message");
+        this.userAgentCore.replyStateless(message, { statusCode: 482 });
         return;
       }
     }
 
-    const message = Parser.parseMessage(messageString, this.getLogger("sip.parser"));
     if (!message) {
       this.logger.warn("UA failed to parse incoming SIP message - discarding.");
       return;
